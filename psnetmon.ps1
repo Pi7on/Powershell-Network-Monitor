@@ -34,13 +34,14 @@ if (-not $refresh) {
 }
 
 while(1) {
-	$interface = Get-WmiObject -class Win32_PerfFormattedData_Tcpip_NetworkInterface | select BytesReceivedPersec, BytesSentPersec
-
+	$interface = Get-CimInstance -class Win32_PerfFormattedData_Tcpip_NetworkInterface | select BytesReceivedPersec, BytesSentPersec, Name
+	
 	$DL_speed = $interface.BytesReceivedPersec
 	$UL_speed = $interface.BytesSentPersec
 	
 	cls	
-	#Write-Host "$([char]0x2191)U:"($UL_speed * $multiplier)$unit"/s`n$([char]0x2193)D:"($DL_speed * $multiplier)$unit"/s"	
+	#Write-Host "$([char]0x2191)U:"($UL_speed * $multiplier)$unit"/s`n$([char]0x2193)D:"($DL_speed * $multiplier)$unit"/s"
+	Write-Host $interface.name
 	Write-Host "U$([char]0x2b06)" $unit"/s" ($UL_speed * $multiplier)"`nD$([char]0x2b07)"$unit"/s"($DL_speed * $multiplier)
 	
 	Start-Sleep -milliseconds $refresh
